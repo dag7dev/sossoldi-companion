@@ -11,8 +11,14 @@ A simple Django webapp to be used in tandem with the application "Sossoldi", ava
 - Python 3.11 or higher
 - Django 5.2 or higher
 - Poetry for dependency management
+- Running Ollama3 Instance (optional, for AI-powered features, like category prediction). Make sure it exposes the API on port `11434`.
 
 ## Installation
+0. Optional: install ollama3 and make sure it is running on port `11434`:
+   ```bash
+   ollama serve --model llama3
+   ```
+
 ### Docker (Recommended)
 1. Clone the repository:
    ```bash
@@ -30,6 +36,9 @@ A simple Django webapp to be used in tandem with the application "Sossoldi", ava
     - `DB_PASSWORD`: The password for the database user.
     - `DB_HOST`: The database host (default is `db`).
     - `DB_PORT`: The database port (default is `5432` for PostgreSQL).
+    - `OLLAMA_API_URL`: The URL for the Ollama API (default is `http://host.docker.internal:11434/api/generate`). 
+    - `OLLAMA_ENABLE`: Set to `True` to enable Ollama integration, `False` to disable it (default is `False`).
+    You should change it to `http://localhost:11434/api/generate` if you are not using Docker.
 
     To setup django superuser password, you should generate a password using the command using Linux or WSL, and place it in the `.django-superuser-pw` file:
     ```bash
@@ -72,6 +81,10 @@ A simple Django webapp to be used in tandem with the application "Sossoldi", ava
     - `DB_PASSWORD`: The password for the database user.
     - `DB_HOST`: The database host (default is `db`).
     - `DB_PORT`: The database port (default is `5432` for PostgreSQL).
+    - `OLLAMA_API_URL`: The URL for the Ollama API (default is `http://host.docker.internal:11434/api/generate`). 
+    - `OLLAMA_ENABLE`: Set to `True` to enable Ollama integration, `False` to disable it (default is `False`).
+    You should change it to `http://localhost:11434/api/generate` if you are not using Docker.
+
 
     See the [example .env file](.env.sample) for reference.
 

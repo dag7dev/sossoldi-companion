@@ -5,8 +5,23 @@ from datetime import datetime
 
 from ..models import BankAccount, Category, Transaction
 
+import requests
+
+from django.conf import settings
+
 class BaseBankImporter(ABC):
     BANK_NAME = "Base Bank"
+    EXAMPLES_PER_CATEGORY = {
+        "Entrata": [
+                "BONIFICO DA: MARCO ROSSI", "BONIFICO UNICREDIT", "INCASSO FATTURA", "ACCREDITO PAGA",
+                "DONAZIONE LIBERA", "PAGAMENTO DA CLIENTE", "VENDITA EBAY", "RICARICA HYPE",
+                "GIROCONTO ENTRATA", "RIMBORSO SPESE"
+        ],
+        "Uscita": [
+                "ENEL SERVIZIO ELETTRICO", "HERA GAS E LUCE", "AFFITTO MENSILE", "CONDOMINIO SPA",
+                "FASTWEB CASA", "ACQUA HERA", "VODAFONE CASA", "LUCE E GAS AXPO", "IMU COMUNE DI MILANO", "TASSA RIFIUTI DOMESTICA"
+        ],
+    }
     CATEGORIES = {
         "Altro": {"icon": "category", "is_income": False},
         "Entrata": {"icon": "attach_money", "is_income": True},
@@ -137,14 +152,57 @@ class BaseBankImporter(ABC):
         """
         Get the transaction date from the CSV row.
         """
-        return datetime.strptime(row[self.CSV_FIELDS["booking_date"]], "%Y-%m-%d")
+        return datetime.strptime(row[self.CSV_FIELDS["date"]], "%Y-%m-%d")
 
-    def get_category(self, name, fallback="Altro"):
+    def get_category(self,row,name=None,model="llama3",examples_per_category=None,fallback="Altro", categories=None):
         """
-        Get or create a category based on the name.
-        If the category does not exist, create it with a fallback name and default icon.
+        Get or create a Category object based on a predicted or provided category name.
         """
-        try:
-            return Category.objects.get(name=name, importer=self.BANK_NAME)
-        except Category.DoesNotExist:
-            return Category.objects.create(name=fallback, icon="category", importer=self.BANK_NAME, txn_type="OUT", created_by=self.user)
+        if name is None and settings.OLLAMA_ENABLE:
+            print(f"Predicting category for row: {row}")
+            name = self.predict_category(
+                    row,
+                    examples_per_category=examples_per_category,
+                    model=model,
+                    categories=categories or self.CATEGORIES
+            )
+
+        final_name = name if name in self.CATEGORIES else fallback
+        data = self.CATEGORIES.get(final_name)
+
+        category, _ = Category.objects.get_or_create(
+            name=final_name,
+            importer=self.BANK_NAME,
+            txn_type="IN" if data["is_income"] else "OUT",
+            created_by=self.user,
+            defaults={"icon": data["icon"]},
+        )
+
+        return category
+
+
+    def predict_category(self, row, examples_per_category=None, model="llama3", categories=None):
+        """
+        Predict the category using a language model.
+        """
+        examples_per_category = examples_per_category or self.EXAMPLES_PER_CATEGORY
+
+        prompt = (
+            f"Questa è una transazione:\n{str(row)}\n\n"
+            f"Categorie possibili: {', '.join(list(categories.keys()))}\n"
+            "Scegli la categoria più adatta. Rispondi solo con il nome esatto della categoria, senza spiegazioni.\n"
+            "Se l'importo è positivo è un'entrata, se negativo è un'uscita.\n"
+            "L'utente è una persona comune, con transazioni private, non aziendali.\n"
+            "Se riconosci che una categoria è una possibile entrata, allora considera che le categorie in entrata\n"
+            "sono " + ", ".join([name for name, data in categories.items() if data["is_income"]]) + ".\n"
+            "Se riconosci che una categoria è una possibile uscita, allora considera che le categorie in uscita\n"
+            "sono " + ", ".join([name for name, data in categories.items() if not data["is_income"]]) + ".\n"
+            # f"Ecco alcuni esempi:\n{examples_per_category}\n\n"
+        )
+        print(f"Prompt for category prediction: {prompt}")
+        response = requests.post(
+            settings.OLLAMA_API_URL,
+            json={"model": model, "prompt": prompt, "stream": False},
+        )
+        response.raise_for_status()
+        return response.json()["response"].strip()

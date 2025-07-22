@@ -143,3 +143,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "/login/"
 
 LOGIN_REDIRECT_URL = "home_accounts"
+
+OLLAMA_API_URL = os.getenv("OLLAMA_API_URL", "http://host.docker.internal:11434/api/generate")
+OLLAMA_ENABLE = os.getenv("OLLAMA_ENABLE", "False").lower() in ("true", "1", "yes")

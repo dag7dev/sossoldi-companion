@@ -13,13 +13,12 @@ services:
 
   web:
     build:
-      context: ./
+      context: .
     image: sossoldicompanion/webapp:1.0.0
     command: bash /app/entrypoint.sh
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
       - .django-superuser-pw:/app/.django-superuser-pw
     environment:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
