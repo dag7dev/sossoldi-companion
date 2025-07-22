@@ -38,7 +38,7 @@ A simple Django webapp to be used in tandem with the application "Sossoldi", ava
 
     If you don't, a generated password will be used, and you will manually need to check it through the .django-superuser-pw file (it will be created automatically after the first run of the app).
 
-    See the [example .env file](.env.example) for reference.
+    See the [example .env file](.env.sample) for reference.
 
 3. Build and run the Docker container:
    ```bash
@@ -73,7 +73,7 @@ A simple Django webapp to be used in tandem with the application "Sossoldi", ava
     - `DB_HOST`: The database host (default is `db`).
     - `DB_PORT`: The database port (default is `5432` for PostgreSQL).
 
-    See the [example .env file](.env.example) for reference.
+    See the [example .env file](.env.sample) for reference.
 
 5. Run migrations:
    ```bash
