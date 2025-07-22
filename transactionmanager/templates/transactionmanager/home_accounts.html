@@ -123,7 +123,7 @@
             class="form-select{% if form.bank_type.errors %} is-invalid{% endif %}">
             <option value="" selected disabled>Seleziona banca</option>
             {% for value, label in BANK_CHOICES %}
-            <option value="{{ value }}" {% if form.bank_type.value==value %}selected{% endif %}>{{ label }}</option>
+            <option value="{{ value }}" {% if form.bank_type.value == value %}selected{% endif %}>{{ label }}</option>
             {% endfor %}
           </select>
           {% for error in form.bank_type.errors %}

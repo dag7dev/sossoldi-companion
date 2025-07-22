@@ -80,9 +80,10 @@ class N26Importer(BaseBankImporter):
         return float(row[self.CSV_FIELDS["amount"]])
 
     def get_category(self, row):
-        try:
-            category_name = row[self.CSV_FIELDS["category"]]
-        except KeyError:
-            return super().get_category("Altro")
-
-        return super().get_category(category_name, fallback="Altro")
+        return super().get_category(
+            row=row,
+            model="llama3",
+            examples_per_category=self.EXAMPLES_PER_CATEGORY,
+            fallback="Altro",
+            categories=self.CATEGORIES
+        )
