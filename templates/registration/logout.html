@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Logout effettuato{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-5">
+    <div class="card p-4 text-center">
+      <h2 class="mb-3">Logout effettuato</h2>
+      <p class="mb-4 lead">Hai terminato la sessione con successo.</p>
+      <a href="{% url 'login' %}" class="btn btn-primary">Accedi di nuovo</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

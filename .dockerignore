@@ -1,0 +1,10 @@
+*.sock
+*.pid
+.env
+node_modules/
+__pycache__/
+*.log
+.idea/
+.vscode/
+.venv/
+*.sqlite3

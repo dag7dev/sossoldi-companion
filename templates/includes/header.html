@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-lg navbar-dark" style="background: #5A189A;">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-light" href="{% url 'home_accounts' %}">
+      Sossoldi Companion
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sossoldiNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="sossoldiNavbar">
+      <ul class="navbar-nav ms-auto align-items-center">
+        {% if user.is_authenticated %}
+          <li class="nav-item me-3 text-light fw-semibold d-none d-sm-inline">Ciao, <a class="navbar-link" href="{% url 'complete_profile' %}">{{ user.username }}</a></li>
+          <li class="nav-item">
+            <form method="post" action="{% url 'logout' %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-light btn-sm">Esci</button>
+            </form>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">Accedi</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

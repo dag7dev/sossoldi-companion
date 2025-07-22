@@ -1,0 +1,82 @@
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+skip-string-normalization = false
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+combine_as_imports = true
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+exclude = ["migrations"]
+
+[tool.ruff.lint]
+select = [
+  "E", "F", "I", "DJ",
+]
+ignore = [
+  "E501",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+docstring-code-format = true
+indent-style = "space"
+
+[tool.djlint]
+indent = 2
+require-structure = true
+format_css = true
+format_js = true
+max_line_length = 88
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.2.0"
+
+[tool.poetry.scripts]
+run-pre-commit = "pre_commit.main:main"
+
+[project]
+name = "sossoldicompanion"
+version = "1.0.0"
+description = "companion webapp for sossoldi application"
+authors = [
+    {name = "dag7dev"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "certifi (==2022.9.24)",
+    "cfgv (==3.3.1)",
+    "chardet (==5.1.0)",
+    "charset-normalizer (==3.0.1)",
+    "distlib (==0.3.6)",
+    "filelock (==3.9.0)",
+    "identify (==2.5.17)",
+    "idna (==3.3)",
+    "importlib-metadata (==4.12.0)",
+    "more-itertools (==8.10.0)",
+    "nodeenv (==0.13.4)",
+    "platformdirs (==2.6.0)",
+    "pyyaml (==6.0)",
+    "six (==1.16.0)",
+    "zipp (==1.0.0)",
+    "django (>=5.2.4,<6.0.0)",
+    "dotenv (>=0.9.9,<0.10.0)",
+    "django-extensions (>=4.1,<5.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

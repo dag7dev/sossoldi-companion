@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}I tuoi conti bancari {% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+
+  <h1 class="mb-4 text-center">I tuoi conti bancari</h1>
+
+  {% if form.errors %}
+  <div class="alert alert-danger" role="alert" aria-live="assertive">
+    <strong>Errore!</strong> Alcuni campi sono invalidi:
+    <ul class="mb-0 mt-2">
+      {% for field in form %}
+      {% for error in field.errors %}
+      <li>{{ field.label }}: {{ error }}</li>
+      {% endfor %}
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- Lista Conti -->
+  <div class="card shadow-sm mb-5">
+    <div class="card-header">
+      <strong>Lista conti</strong>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom bg-light">
+      <h2 class="h5 m-0">I tuoi conti</h2>
+      <div class="btn-group">
+        <a href="{% url 'import_csv' %}"
+          class="btn btn-outline-secondary btn-sm {% if not accounts %}disabled{% endif %}">
+          <i class="bi bi-file-earmark-arrow-up-fill me-1"></i> Importa
+        </a>
+        <a href="{% url 'export_csv' %}"
+          class="btn btn-outline-primary btn-sm {% if not accounts %}disabled{% endif %}">
+          <i class="bi bi-file-earmark-arrow-down-fill me-1"></i> Esporta
+        </a>
+      </div>
+    </div>
+
+    <ul class="list-group list-group-flush">
+      {% for account in accounts %}
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center position-relative account-item hover-light">
+
+        <div>
+          <span class="fw-bold">{{ account.name }}</span><br>
+          <span class="text-secondary small">{{ account.iban }}</span>
+          {% if account.bank_type %}
+          <span class="badge bg-secondary ms-2">{{ account.get_bank_type_display }}</span>
+          {% endif %}
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+          {% if account.main_account %}
+          <span class="badge bg-primary ms-2">Principale</span>
+          {% endif %}
+
+          <!-- Imposta Principale -->
+          <form method="post" action="{% url 'set_main_account' %}" class="m-0">
+            {% csrf_token %}
+            <input type="hidden" name="account_id" value="{{ account.id }}">
+            <button type="submit" class="btn btn-sm btn-link p-0" title="Imposta come principale">
+              <i
+                class="bi bi-check-circle-fill fs-5 {% if account.main_account %} text-success {% else %} text-lightgray {% endif %}"></i>
+            </button>
+          </form>
+
+          <!-- Elimina -->
+          <form method="post" action="{% url 'delete_account' account.pk %}" class="delete-form m-0">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-link text-danger p-0" title="Elimina"
+              onclick="return confirm('Vuoi eliminare il conto e tutte le transazioni associate?');">
+              <i class="bi bi-trash3-fill fs-5"></i>
+            </button>
+          </form>
+        </div>
+      </li>
+      {% empty %}
+      <li class="list-group-item text-center text-muted fst-italic">
+        Nessun conto aggiunto
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Form Aggiunta Conto -->
+  <div class="card shadow">
+    <div class="card-header">
+      <strong>Aggiungi un nuovo conto</strong>
+    </div>
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- Nome conto -->
+        <div class="mb-3">
+          <label for="id_name" class="form-label">Nome conto</label>
+          <input type="text" name="name" id="id_name" value="{{ form.name.value|default_if_none:'' }}"
+            class="form-control{% if form.name.errors %} is-invalid{% endif %}">
+          {% for error in form.name.errors %}
+          <div class="invalid-feedback" role="alert" aria-live="assertive">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <!-- IBAN -->
+        <div class="mb-3">
+          <label for="id_iban" class="form-label">IBAN</label>
+          <input type="text" name="iban" id="id_iban" value="{{ form.iban.value|default_if_none:'' }}"
+            class="form-control{% if form.iban.errors %} is-invalid{% endif %}">
+          {% for error in form.iban.errors %}
+          <div class="invalid-feedback" role="alert" aria-live="assertive">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <!-- Tipo di banca -->
+        <div class="mb-3">
+          <label for="id_bank_type" class="form-label">Banca</label>
+          <select name="bank_type" id="id_bank_type"
+            class="form-select{% if form.bank_type.errors %} is-invalid{% endif %}">
+            <option value="" selected disabled>Seleziona banca</option>
+            {% for value, label in BANK_CHOICES %}
+            <option value="{{ value }}" {% if form.bank_type.value==value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          {% for error in form.bank_type.errors %}
+          <div class="invalid-feedback" role="alert" aria-live="assertive">{{ error }}</div>
+          {% endfor %}
+          <p class="text-muted mt-2 small">
+            Questo campo è usato per determinare il formato del CSV durante l'importazione. Se non sei sicuro, lascia
+            vuoto.
+          </p>
+        </div>
+
+        <!-- Submit -->
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-success">Salva conto</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

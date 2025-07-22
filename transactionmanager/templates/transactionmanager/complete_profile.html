@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="card-title mb-3">{% if user.first_name and user.last_name %}Modifica{% else %} Completa{% endif %}
+            il tuo profilo</h2>
+          <p class="text-muted">
+            Inserisci il tuo <strong>nome e cognome</strong> esattamente come appaiono nei documenti.
+          </p>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div class="mb-3">
+              <label for="id_username" class="form-label">Username</label>
+              <input type="text" name="username" id="id_username" value="{{ user.username }}" class="form-control"
+                disabled>
+            </div>
+
+            <!-- Nome -->
+            <div class="mb-3">
+              <label for="id_first_name" class="form-label">Nome</label>
+              <input type="text" name="first_name" id="id_first_name"
+                value="{{ form.first_name.value|default_if_none:'' }}"
+                class="form-control{% if form.first_name.errors %} is-invalid{% endif %}">
+              {% for error in form.first_name.errors %}
+              <div class="invalid-feedback" role="alert" aria-live="assertive">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <!-- Cognome -->
+            <div class="mb-3">
+              <label for="id_last_name" class="form-label">Cognome</label>
+              <input type="text" name="last_name" id="id_last_name"
+                value="{{ form.last_name.value|default_if_none:'' }}"
+                class="form-control{% if form.last_name.errors %} is-invalid{% endif %}">
+              {% for error in form.last_name.errors %}
+              <div class="invalid-feedback" role="alert" aria-live="assertive">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save me-1"></i> Salva
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

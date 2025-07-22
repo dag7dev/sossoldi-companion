@@ -1,0 +1,157 @@
+/* === Base === */
+body {
+  background-color: #f8f9fa;
+  font-family: 'Montserrat', sans-serif;
+  color: #212529;
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* === Navbar === */
+.navbar {
+  background-color: #212529 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.navbar-brand,
+.nav-link {
+  color: #ffffff !important;
+  transition: opacity 0.2s ease-in-out;
+}
+.nav-link:hover,
+.nav-link:focus {
+  opacity: 0.75;
+}
+.navbar-toggler {
+  border-color: transparent;
+}
+.navbar-toggler-icon {
+  filter: invert(1);
+}
+
+
+/* === Card Component === */
+.card {
+  border: 1px solid #dee2e6;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+.card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+.card-header {
+  font-weight: 600;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  color: #212529;
+}
+.text-lightgray {
+  color: #adb5bd !important;
+}
+
+/* === Buttons (Minimal/Professional) === */
+.btn {
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary {
+  background-color: #292b2c;
+  color: #ffffff;
+  border: none;
+}
+
+.navbar-link {
+  color: #ffffff !important;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* === Form Elements === */
+.form-label {
+  color: #212529;
+  font-weight: 500;
+}
+
+input.form-control,
+textarea.form-control,
+select.form-select {
+  border-radius: 0.5rem;
+  border-color: #ced4da;
+  transition: border-color 0.2s;
+}
+
+input.form-control:focus,
+textarea.form-control:focus,
+select.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.2);
+}
+
+
+/* === Typography === */
+h1, h2, h3, h4 {
+  font-weight: 600;
+  color: #212529;
+  letter-spacing: -0.25px;
+  margin-bottom: 1rem;
+}
+
+p {
+  color: #495057;
+  margin-bottom: 1rem;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+
+/* === Footer === */
+footer.sossoldi-footer {
+  background-color: #212529;
+  color: #adb5bd;
+  padding: 1.5rem 0;
+  font-size: 0.9rem;
+}
+footer .icon-link {
+  color: #adb5bd;
+  font-size: 1.3rem;
+  margin: 0 0.4rem;
+  transition: color 0.2s ease;
+}
+footer .icon-link:hover {
+  color: #0d6efd;
+}
+
+
+/* === Utility === */
+.shadow-sm {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+}
+.rounded-sm {
+  border-radius: 0.5rem;
+}
+
+.mt-auto {
+  margin-top: auto !important;
+}
+
+
+/* === Responsive nav tweaks === */
+@media (max-width: 576px) {
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+  .nav-link {
+    font-size: 0.95rem;
+  }
+}
